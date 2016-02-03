@@ -23,9 +23,6 @@ set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
 # MATLAB support needs MEX (Tested on Ubuntu 14.04, Matlab R2013a)
 option(MATLAB_SUPPORT "Mex with MATLAB" OFF)
 option(OCTAVE_SUPPORT "Oct with Octave mkoctfile" OFF)
-option(COMPILE_LFR "Compile the Lancichinetti-Fortunato-Radicchi benchmark network" OFF)
-
-#set(MATLAB_ROOT "/usr/local/MATLAB/R2015a")
 
 if(MATLAB_SUPPORT)
     find_package(MyMatlab)
