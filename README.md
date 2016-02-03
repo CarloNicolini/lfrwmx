@@ -6,9 +6,9 @@ Lancichinetti-Fortunato-Radicchi benchmark is a network generator for benchmark 
 
 In this release I've adapted and partially rewritten the freely-available code (https://sites.google.com/site/santofortunato/inthepress2) to generate weighted networks as described in the paper by Lancichinetti A. and Fortunato S., *Benchmarks for testing community detection algorithms on directed and weighted graphs with overlapping communities*, Phys. Rev. E 80, 016118.
 
-This release of PACO comes with some convenience MATLAB wrappers around the famous LFR benchmark. You can compile the LFR benchmark by specifying:
+You can compile the LFR benchmark by specifying:
 
-    $> cmake -DCOMPILE_LFR=True -DMATLAB_SUPPORT=True ..
+    $> cmake -DMATLAB_SUPPORT=True ..
     $> make lfrw_mx
 
 The `lfrw_mx` function is self-documented:
