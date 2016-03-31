@@ -55,6 +55,10 @@ void printUsage()
     mexPrintf("\tDesidered average degree of the network\n");
     mexPrintf("'maxk'\n");
     mexPrintf("\tDesidered max degree of the network\n");
+    mexPrintf("'minc'\n");
+    mexPrintf("\tDesidered minimum size of the community\n");
+    mexPrintf("'maxc'\n");
+    mexPrintf("\tDesidered maximum size of the community\n");
     mexPrintf("'mut'\n");
     mexPrintf("\tDesidered community topological mixing coefficient (range [0,1])\n");
     mexPrintf("'muw'\n");
