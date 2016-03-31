@@ -29,7 +29,6 @@ standard_include.h
 
 
 add_library(LFRW SHARED ${LFRW_SRCS} ${LFRW_HDRS})
-target_link_libraries(LFRW ${IGRAPH_LIBRARIES})
 
 add_executable(test_benchm test_benchm.cpp)
 target_link_libraries(test_benchm LFRW)

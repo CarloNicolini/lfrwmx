@@ -26,12 +26,10 @@
 #include <iostream>
 #include <string.h>
 #include <sstream>
-#include <igraph.h>
 #include <sys/time.h>
 
 #include "benchm.h"
 #include "set_parameters.h" // the LFR parameters
-#include "../paco/igraph_utils.h" // to handle conversion from EigenMatrix to igraph object and then to mxArray
 
 #ifdef __linux__
 #include <mex.h>

@@ -26,7 +26,6 @@
 #include <iostream>
 #include <string.h>
 #include <sstream>
-#include <igraph.h>
 #include <sys/time.h>
 
 #ifdef __linux__

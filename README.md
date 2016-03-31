@@ -13,11 +13,9 @@ You can compile the LFR benchmark by specifying:
 
 The `lfrw_mx` function is self-documented:
 
-    LFRW: Lancichinetti-Fortunato-Radicchi network generator for weighted networks
+    LFRW: Lancichinetti-Fortunato-Radicchi network generator
     This program produces weighted adjacency matrices for graph community detection benchmark
-    
-    [WeightedGraph, membership] = lfrw_mx('argname',argvalue);
-    
+    [WeightedGraph, membership] = lfrw('argname',argvalue);
     Input:
     'N'
         Desidered number of nodes in the network
@@ -25,6 +23,10 @@ The `lfrw_mx` function is self-documented:
         Desidered average degree of the network
     'maxk'
         Desidered max degree of the network
+    'minc'
+        Desidered minimum size of the community
+    'maxc'
+        Desidered maximum size of the community
     'mut'
         Desidered community topological mixing coefficient (range [0,1])
     'muw'
@@ -37,3 +39,5 @@ The `lfrw_mx` function is self-documented:
         Desidered beta exponent
     'C'
         Desidered clustering coefficient
+    Error using lfrw_mx
+    Error at argument: 0: Not enough input arguments. 
