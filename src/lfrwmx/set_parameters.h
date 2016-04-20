@@ -17,7 +17,7 @@ public:
     double tau2;
     double mixing_parameter_topological;
     double mixing_parameter_weights;
-    double beta;
+    double beta; //exponent
     int overlapping_nodes;
     int overlap_membership;
     int nmin;
