@@ -75,8 +75,10 @@ int print_network(deque<set<int> > & E, const deque<deque<int> > & member_list, 
             density+=media_int/pair_num;
         if(pair_num_e!=0)
             sparsity+=media_est/pair_num_e;
+    // CARLO Inserito ma non corretto
+    // FILE_LOG(logINFO) << "Cluster average intra "<<  media_int;
+    // FILE_LOG(logINFO) << "Cluster average extra "<<  media_est;
     }
-
     density=density/member_matrix.size();
     sparsity=sparsity/member_matrix.size();
 

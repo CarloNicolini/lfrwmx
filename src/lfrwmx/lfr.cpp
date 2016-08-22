@@ -62,11 +62,11 @@ void printUsage()
     mexPrintf("'muw'\n");
     mexPrintf("\tDesidered weights mixing coefficient (range [0,1])\n");
     mexPrintf("'t1'\n");
-    mexPrintf("\tDesidered exponent for the degree distribution\n");
+    mexPrintf("\tDesidered exponent for the degree distribution, default t1=2\n");
     mexPrintf("'t2'\n");
-    mexPrintf("\tDesidered exponent for the community size distribution\n");
+    mexPrintf("\tDesidered exponent for the community size distribution, default t2=1\n");
     mexPrintf("'beta'\n");
-    mexPrintf("\tDesidered beta exponent\n");
+    mexPrintf("\tDesidered beta exponent for powerlaw strenghts distribution, default beta=1.5\n");
     mexPrintf("'C'\n");
     mexPrintf("\tDesidered clustering coefficient\n");
 }
@@ -291,7 +291,7 @@ void mexFunction(int nOutputArgs, mxArray *outputArgs[], int nInputArgs, const m
 
         // Copy the membership to output argument #1
         for (int i=0; i<p.num_nodes;++i)
-            mxGetPr(outputArgs[1])[i]=membership.at(i);
+            mxGetPr(outputArgs[1])[i]=membership.at(i)+1; // put +1 for compatibility with matlab
         //memcpy(mxGetPr(outputArgs[1]),membership.data(),p.num_nodes*sizeof(int));
     }
     catch (std::exception &e)
