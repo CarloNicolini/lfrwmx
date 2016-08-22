@@ -73,19 +73,20 @@ double solve_dmin(const double& dmax, const double &dmed, const double &gamma)
     double average_k1=average_degree(dmin_r, dmin_l, gamma);
     double average_k2=dmin_r;
 
+
     if ((average_k1-dmed>0) || (average_k2-dmed<0))
     {
-        FILE_LOG(logERROR) << "The average degree is out of range:";
+        std::stringstream ss;
         if (average_k1-dmed>0)
         {
-            FILE_LOG(logERROR)<<"You should increase the average degree (bigger than "<<average_k1<<")";
-            FILE_LOG(logERROR)<<"(or decrease the maximum degree...)";
+            ss  <<
+            "You should increase the average degree (bigger than "<<average_k1<<")" <<"(or decrease the maximum degree...)";
         }
         if (average_k2-dmed<0)
         {
-            FILE_LOG(logERROR)<<"You should decrease the average degree (smaller than "<<average_k2<<")";
-            FILE_LOG(logERROR)<<"(or increase the maximum degree...)";
+            ss <<"You should decrease the average degree (smaller than "<<average_k2<<")" << "(or increase the maximum degree...)";
         }
+        throw std::logic_error(ss.str());
         return -1;
     }
 
@@ -326,6 +327,7 @@ int internal_degree_and_membership (double mixing_parameter, int overlapping_nod
     if(num_nodes< overlapping_nodes)
     {
 
+        throw std::logic_error("There are more overlapping nodes than nodes in the whole network! Please, decrease the former ones or increase the latter ones");
         FILE_LOG(logERROR) <<"There are more overlapping nodes than nodes in the whole network! Please, decrease the former ones or increase the latter ones";
         return -1;
     }
@@ -469,6 +471,7 @@ int internal_degree_and_membership (double mixing_parameter, int overlapping_nod
 
     if(build_bipartite_network(member_matrix, member_numbers, num_seq)==-1)
     {
+        throw std::logic_error("it seems that the overlapping nodes need more communities that those I provided. Please increase the number of communities or decrease the number of overlapping nodes");
         FILE_LOG(logERROR) << "it seems that the overlapping nodes need more communities that those I provided. Please increase the number of communities or decrease the number of overlapping nodes";
         return -1;
     }
@@ -512,6 +515,7 @@ int internal_degree_and_membership (double mixing_parameter, int overlapping_nod
             {
                 if(change_community_size(num_seq)==-1)
                 {
+                    throw std::logic_error("this program needs more than one community to work fine");
                     FILE_LOG(logERROR) <<"this program needs more than one community to work fine";
                     return -1;
                 }
@@ -1185,6 +1189,7 @@ int erase_links(deque<set<int> > & E, const deque<deque<int> > & member_list, co
                 if(deqar.size()==E[i].size())  	// this shouldn't happen...
                 {
 
+                    throw std::logic_error("Something went wrong: there is a node which does not respect the constraints. (option -sup)");
                     FILE_LOG(logERROR) << "Something went wrong: there is a node which does not respect the constraints. (option -sup)";
                     return -1;
                 }
@@ -1225,6 +1230,7 @@ int erase_links(deque<set<int> > & E, const deque<deque<int> > & member_list, co
                 if(stopper_==stopper_here)  	// this shouldn't happen...
                 {
 
+                    throw std::logic_error("Something went wrong: there is a node which does not respect the constraints. (option -inf)");
                     FILE_LOG(logERROR) << "Something went wrong: there is a node which does not respect the constraints. (option -inf)";
                     return -1;
                 }

@@ -294,9 +294,8 @@ void mexFunction(int nOutputArgs, mxArray *outputArgs[], int nInputArgs, const m
             mxGetPr(outputArgs[1])[i]=membership.at(i)+1; // put +1 for compatibility with matlab
         //memcpy(mxGetPr(outputArgs[1]),membership.data(),p.num_nodes*sizeof(int));
     }
-    catch (std::exception &e)
+    catch (const std::exception &e)
     {
-        cerr << e.what() << endl;
         mexErrMsgTxt(e.what());
     }
 

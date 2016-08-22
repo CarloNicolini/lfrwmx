@@ -1,6 +1,8 @@
 #ifndef _BINARY_BENCHM_H_
 #define _BINARY_BENCHM_H_
 
+#include <stdexcept>
+#include <sstream>
 #include "standard_include.h"
 #include "cc.h"
 #include "random.h"

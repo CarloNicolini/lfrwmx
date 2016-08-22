@@ -1,5 +1,7 @@
+set(CMAKE_CXX_COMPILER "g++-4.8")
+set(CMAKE_C_COMPILER "gcc-4.8")
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-project(Paco)
+project(LFRW)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(PROJECT_BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/")
@@ -18,7 +20,7 @@ else()
         message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 # Specify if matlab support and python wrappers are to be compiled. Default OFF
 # MATLAB support needs MEX (Tested on Ubuntu 14.04, Matlab R2013a)
 option(MATLAB_SUPPORT "Mex with MATLAB" OFF)

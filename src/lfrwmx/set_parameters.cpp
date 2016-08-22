@@ -97,18 +97,21 @@ bool Parameters::arrange()
 
     if (num_nodes==unlikely)
     {
+        throw std::logic_error("ERROR: number of nodes unspecified");
         FILE_LOG(logERROR) << "ERROR: number of nodes unspecified";
         return false;
     }
 
     if (average_k==unlikely)
     {
+        throw std::logic_error("ERROR: average degree unspecified");
         FILE_LOG(logERROR) << "ERROR: average degree unspecified";
         return false;
     }
 
     if (max_degree==unlikely)
     {
+        throw std::logic_error("ERROR: maximum degree unspecified");
         FILE_LOG(logERROR) << "ERROR: maximum degree unspecified";
         return false;
     }
@@ -120,6 +123,7 @@ bool Parameters::arrange()
 
     if (mixing_parameter_weights==unlikely)
     {
+        throw std::logic_error("ERROR: weight mixing parameter (option -muw) unspecified");
         FILE_LOG(logERROR) << "ERROR: weight mixing parameter (option -muw) unspecified";
         return false;
     }
@@ -127,18 +131,21 @@ bool Parameters::arrange()
 
     if(mixing_parameter_topological > 1 || mixing_parameter_topological <0 )
     {
+        throw std::logic_error("ERROR:mixing parameter > 1 (must be between 0 and 1)");
         FILE_LOG(logERROR)<<"ERROR:mixing parameter > 1 (must be between 0 and 1)";
         return false;
     }
 
     if(overlapping_nodes<0 || overlap_membership<0)
     {
+        throw std::logic_error("ERROR:some positive parameters are negative");
         FILE_LOG(logERROR)<<"ERROR:some positive parameters are negative";
         return false;
     }
 
     if (num_nodes<=0 || average_k<=0 || max_degree<=0 || mixing_parameter_topological<0 || mixing_parameter_weights<0 || (nmax<=0 && nmax!=unlikely) || (nmin<=0 && nmin!=unlikely) )
     {
+        throw std::logic_error("ERROR:some positive parameters are negative");
         FILE_LOG(logERROR)<<"ERROR:some positive parameters are negative";
         return false;
     }
@@ -146,6 +153,7 @@ bool Parameters::arrange()
 
     if(mixing_parameter_weights > 1 || mixing_parameter_weights <0 )
     {
+        throw std::logic_error("ERROR:mixing2 parameter > 1 (must be between 0 and 1)");
         FILE_LOG(logERROR)<<"ERROR:mixing2 parameter > 1 (must be between 0 and 1)";
         return false;
     }
@@ -157,6 +165,7 @@ bool Parameters::arrange()
 
     if(excess && defect)
     {
+        throw std::logic_error("ERROR:both options -inf and -sup cannot be used at the same time");
         FILE_LOG(logERROR)<<"ERROR:both options -inf and -sup cannot be used at the same time";
         return false;
     }
@@ -182,13 +191,15 @@ bool Parameters::arrange()
         FILE_LOG(logINFO)<<"Community size range set equal to ["<<nmin<<" , "<<nmax<<"]";
         if (nmin>nmax)
         {
-            FILE_LOG(logERROR)<<"ERROR: INVERTED COMMUNITY SIZE BOUNDS";
+            throw std::logic_error("ERROR: Inverted community size bounds");
+            FILE_LOG(logERROR)<<"ERROR: Inverted community size bounds";
             return false;
         }
 
         if(nmax>num_nodes)
         {
-            FILE_LOG(logERROR)<<"ERROR: maxc BIGGER THAN THE NUMBER OF NODES";
+            throw std::logic_error("ERROR: maxc bigger than the number of nodes");
+            FILE_LOG(logERROR)<<"ERROR: maxc bigger than the number of nodes";
             return false;
         }
     }
@@ -209,6 +220,7 @@ bool Parameters::set(string & flag, string & num)
     double value;
     if(!cast_string_to_double(num, value))
     {
+        throw std::logic_error("ERROR while reading parameters");
         FILE_LOG(logERROR) << "ERROR while reading parameters";
         return false;
     }
@@ -217,6 +229,7 @@ bool Parameters::set(string & flag, string & num)
     {
         if (fabs(value-int(value))>1e-8)
         {
+            throw std::logic_error("ERROR: number of nodes must be an integer");
             FILE_LOG(logERROR) << "ERROR: number of nodes must be an integer";
             return false;
         }
@@ -255,6 +268,7 @@ bool Parameters::set(string & flag, string & num)
     {
         if (fabs(value-int (value))>1e-8)
         {
+            throw std::logic_error("ERROR: the minumum community size must be an integer");
             FILE_LOG(logERROR)<<"ERROR: the minumum community size must be an integer";
             return false;
         }
@@ -264,6 +278,7 @@ bool Parameters::set(string & flag, string & num)
     {
         if (fabs(value-int (value))>1e-8)
         {
+            throw std::logic_error("ERROR: the maximum community size must be an integer");
             FILE_LOG(logERROR) << "ERROR: the maximum community size must be an integer";
             return false;
         }
@@ -273,6 +288,7 @@ bool Parameters::set(string & flag, string & num)
     {
         if (fabs(value-int (value))>1e-8)
         {
+            throw std::logic_error("ERROR: the number of overlapping nodes must be an integer");
             FILE_LOG(logERROR) << "ERROR: the number of overlapping nodes must be an integer";
             return false;
         }
@@ -282,6 +298,7 @@ bool Parameters::set(string & flag, string & num)
     {
         if (fabs(value-int (value))>1e-8)
         {
+            throw std::logic_error("ERROR: the number of membership of the overlapping nodes must be an integer");
             FILE_LOG(logERROR) << "ERROR: the number of membership of the overlapping nodes must be an integer";
             return false;
         }
@@ -293,7 +310,9 @@ bool Parameters::set(string & flag, string & num)
     }
     else
     {
-        FILE_LOG(logERROR) <<"ERROR while reading parameters: "<<flag<<" is an unknown option";
+        stringstream ss; ss << "ERROR while reading parameters: "<<flag<<" is an unknown option";
+        throw std::logic_error(ss.str());
+        FILE_LOG(logERROR) << ss;
         return false;
     }
     return true;
