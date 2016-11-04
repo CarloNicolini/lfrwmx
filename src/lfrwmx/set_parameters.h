@@ -13,8 +13,8 @@ public:
     int num_nodes;
     double average_k;
     int max_degree;
-    double tau;
-    double tau2;
+    double tau_degree;
+    double tau_commsize;
     double mixing_parameter_topological;
     double mixing_parameter_weights;
     double beta; //exponent
@@ -30,9 +30,10 @@ public:
 
     bool set(string &, string &);
     void set_random();
-    bool arrange();
+    int arrange();
     deque<string> command_flags;
-    void print();
+    void print_parameters();
+    int verbosity;
 };
 
 void print_usage();

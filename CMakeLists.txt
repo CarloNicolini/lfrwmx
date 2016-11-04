@@ -42,5 +42,26 @@ if(OCTAVE_SUPPORT)
     add_definitions("-DOCTAVE_SUPPORT")
 endif(OCTAVE_SUPPORT)
 
+
+# PYTHON_SUPPORT needs Cython (install it via "pip install cython")
+option(PYTHON_SUPPORT "Python support through Cython extensions" OFF)
+if(PYTHON_SUPPORT)
+    set(Python_ADDITIONAL_VERSIONS "2.7.12")
+    find_package(PythonInterp)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    find_package(PythonLibs 2.7.12 EXACT REQUIRED)
+    find_package(Numpy)
+    include_directories(${PYTHON_NUMPY_INCLUDE_DIR})
+        # Print some informations on python libraries linked and included
+        message(STATUS "Python libraries are ${PYTHON_LIBRARIES}")
+        message(STATUS "Python libraries are included in ${PYTHON_INCLUDE_DIRS}")
+        message(STATUS "Python versions found is ${PYTHONLIBS_VERSION_STRING}")
+        include_directories("${PYTHON_INCLUDE_DIR}")
+    include(UseCython)
+    include_directories("${PYTHON_INCLUDE_DIR}/numpy")
+    include_directories("src/lfrwmx") #necessary to include set_parameters.h in Cython
+    message(STATUS "${PYTHON_INCLUDE_DIR}/numpy")
+endif(PYTHON_SUPPORT)
+
 # Add the subdirectory with the source code
 add_subdirectory(src)

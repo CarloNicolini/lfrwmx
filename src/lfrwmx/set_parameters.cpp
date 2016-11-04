@@ -3,37 +3,38 @@
 Parameters::Parameters()
 {
 
-    num_nodes=unlikely;
-    average_k=unlikely;
-    max_degree=unlikely;
+    num_nodes=unlikely_value;
+    average_k=unlikely_value;
+    max_degree=unlikely_value;
 
-    tau=2;
-    tau2=1;
+    tau_degree=2;
+    tau_commsize=1;
 
-    mixing_parameter_topological=unlikely;
-    mixing_parameter_weights=unlikely;
+    mixing_parameter_topological=unlikely_value;
+    mixing_parameter_weights=unlikely_value;
 
     beta=1.5;
 
     overlapping_nodes=0;
     overlap_membership=0;
 
-    nmin=unlikely;
-    nmax=unlikely;
+    nmin=unlikely_value;
+    nmax=unlikely_value;
 
     randomf=false;
     fixed_range=false;
     excess=false;
     defect=false;
 
-    clustering_coeff=unlikely;
+    clustering_coeff=unlikely_value;
+    verbosity=0;
 
     command_flags.push_back("-N");			//0
     command_flags.push_back("-k");			//1
     command_flags.push_back("-maxk");		//2
     command_flags.push_back("-mut");		//3
-    command_flags.push_back("-t1");			//4
-    command_flags.push_back("-t2");			//5
+    command_flags.push_back("-taudegree");			//4
+    command_flags.push_back("-taucommsize");			//5
     command_flags.push_back("-minc");		//6
     command_flags.push_back("-maxc");		//7
     command_flags.push_back("-on");			//8
@@ -41,19 +42,20 @@ Parameters::Parameters()
     command_flags.push_back("-beta");		//10
     command_flags.push_back("-muw");		//11
     command_flags.push_back("-C");			//12
+    command_flags.push_back("-verb");			//13
 }
 
 /**
  * @brief Parameters::print
  */
-void Parameters::print()
+void Parameters::print_parameters()
 {
-    FILE_LOG(logINFO) << "Num Nodes=" <<
+    cerr << "Num Nodes=" <<
     "num_nodes "<< num_nodes << endl <<
     "average_k "<<average_k << endl <<
     "max_degree "<< max_degree << endl <<
-    "tau "<< tau << endl <<
-    "tau2 "<<tau2 << endl <<
+    "tau_degree "<< tau_degree << endl <<
+    "tau_commsize "<<tau_commsize << endl <<
     "mixing_parameter_topological "<< mixing_parameter_topological << endl <<
     "mixing_parameter_weights " << mixing_parameter_weights << endl <<
     "beta "<< beta << endl <<
@@ -90,38 +92,38 @@ void Parameters::set_random()
  * @brief Parameters::arrange
  * @return
  */
-bool Parameters::arrange()
+int Parameters::arrange()
 {
     if(randomf)
         set_random();
 
-    if (num_nodes==unlikely)
+    if (num_nodes==unlikely_value)
     {
         throw std::logic_error("ERROR: number of nodes unspecified");
         FILE_LOG(logERROR) << "ERROR: number of nodes unspecified";
         return false;
     }
 
-    if (average_k==unlikely)
+    if (average_k==unlikely_value)
     {
         throw std::logic_error("ERROR: average degree unspecified");
         FILE_LOG(logERROR) << "ERROR: average degree unspecified";
         return false;
     }
 
-    if (max_degree==unlikely)
+    if (max_degree==unlikely_value)
     {
         throw std::logic_error("ERROR: maximum degree unspecified");
         FILE_LOG(logERROR) << "ERROR: maximum degree unspecified";
         return false;
     }
 
-    if(mixing_parameter_topological==unlikely)
+    if(mixing_parameter_topological==unlikely_value)
     {
         mixing_parameter_topological=mixing_parameter_weights;
     }
 
-    if (mixing_parameter_weights==unlikely)
+    if (mixing_parameter_weights==unlikely_value)
     {
         throw std::logic_error("ERROR: weight mixing parameter (option -muw) unspecified");
         FILE_LOG(logERROR) << "ERROR: weight mixing parameter (option -muw) unspecified";
@@ -143,7 +145,7 @@ bool Parameters::arrange()
         return false;
     }
 
-    if (num_nodes<=0 || average_k<=0 || max_degree<=0 || mixing_parameter_topological<0 || mixing_parameter_weights<0 || (nmax<=0 && nmax!=unlikely) || (nmin<=0 && nmin!=unlikely) )
+    if (num_nodes<=0 || average_k<=0 || max_degree<=0 || mixing_parameter_topological<0 || mixing_parameter_weights<0 || (nmax<=0 && nmax!=unlikely_value) || (nmin<=0 && nmin!=unlikely_value) )
     {
         throw std::logic_error("ERROR:some positive parameters are negative");
         FILE_LOG(logERROR)<<"ERROR:some positive parameters are negative";
@@ -158,7 +160,7 @@ bool Parameters::arrange()
         return false;
     }
 
-    if(nmax!= unlikely && nmin!=unlikely)
+    if(nmax!= unlikely_value && nmin!=unlikely_value)
         fixed_range=true;
     else
         fixed_range=false;
@@ -173,15 +175,15 @@ bool Parameters::arrange()
     FILE_LOG(logINFO)<<"number of nodes:"<<num_nodes;
     FILE_LOG(logINFO)<<"average degree:"<<average_k;
     FILE_LOG(logINFO)<<"maximum degree:"<<max_degree;
-    FILE_LOG(logINFO)<<"exponent for the degree distribution:"<<tau;
-    FILE_LOG(logINFO)<<"exponent for the community size distribution:"<<tau2;
+    FILE_LOG(logINFO)<<"exponent for the degree distribution:"<<tau_degree;
+    FILE_LOG(logINFO)<<"exponent for the community size distribution:"<<tau_commsize;
     FILE_LOG(logINFO)<<"mixing parameter (topology):"<<mixing_parameter_topological;
     FILE_LOG(logINFO)<<"mixing parameter (weights):"<<mixing_parameter_weights;
     FILE_LOG(logINFO)<<"beta exponent:"<<beta;
     FILE_LOG(logINFO)<<"number of overlapping nodes:"<<overlapping_nodes;
     FILE_LOG(logINFO)<<"number of memberships of the overlapping nodes:"<<overlap_membership;
 
-    if(clustering_coeff!=unlikely)
+    if(clustering_coeff!=unlikely_value)
     {
         FILE_LOG(logINFO) << "Average clustering coefficient: "<<clustering_coeff;
     }
@@ -257,11 +259,11 @@ bool Parameters::set(string & flag, string & num)
     }
     else if(flag==command_flags[4])
     {
-        tau=value;
+        tau_degree=value;
     }
     else if(flag==command_flags[5])
     {
-        tau2=value;
+        tau_commsize=value;
     }
 
     else if(flag==command_flags[6])

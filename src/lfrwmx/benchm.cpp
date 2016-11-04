@@ -1,7 +1,7 @@
 /*
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *                                                                               *
- *    This program is free software; you can redistribute it and/or modify         *
+ *    This program is free software; you can redistribute it and/or modify       *
  *  it under the terms of the GNU General Public License as published by         *
  *  the Free Software Foundation; either version 2 of the License, or            *
  *  (at your option) any later version.                                          *
@@ -18,10 +18,10 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *                                                                               *
  *  Created by Andrea Lancichinetti on 7/01/09 (email: arg.lanci@gmail.com)      *
- *    Modified on 28/05/09                                                         *
- *    Collaborators: Santo Fortunato                                                 *
+ *    Modified on 28/05/09                                                       *
+ *    Collaborators: Santo Fortunato                                             *
  *  Location: ISI foundation, Turin, Italy                                       *
- *    Project: Benchmarking community detection programs                           *
+ *    Project: Benchmarking community detection programs                         *
  *                                                                               *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
@@ -75,9 +75,9 @@ int print_network(deque<set<int> > & E, const deque<deque<int> > & member_list, 
             density+=media_int/pair_num;
         if(pair_num_e!=0)
             sparsity+=media_est/pair_num_e;
-    // CARLO Inserito ma non corretto
-    // FILE_LOG(logINFO) << "Cluster average intra "<<  media_int;
-    // FILE_LOG(logINFO) << "Cluster average extra "<<  media_est;
+        // CARLO Inserito ma non corretto
+        // FILE_LOG(logINFO) << "Cluster average intra "<<  media_int;
+        // FILE_LOG(logINFO) << "Cluster average extra "<<  media_est;
     }
     density=density/member_matrix.size();
     sparsity=sparsity/member_matrix.size();
@@ -553,7 +553,7 @@ int benchmark(bool excess, bool defect, int num_nodes, double  average_k, int  m
     if(erase_links(E, member_list, excess, defect, mixing_parameter)==-1)
         return -1;
 
-    if(ca!=unlikely)
+    if(ca!=unlikely_value)
     {
         FILE_LOG(logINFO) << "Trying to approach an average clustering coefficient ... " << ca;
         cclu(E, member_list, member_matrix, ca);
@@ -567,10 +567,43 @@ int benchmark(bool excess, bool defect, int num_nodes, double  average_k, int  m
     membership.resize(member_list.size());
     for (unsigned int i=0; i<member_list.size();++i)
     {
+        //cout << "->" << member_list[i][0] << endl;
         membership[i]=member_list[i][0];
     }
 
     return 0;
+}
+
+int benchmark_py(int excess,
+                 int defect,
+                 int num_nodes,
+                 double average_k,
+                 int max_degree,
+                 double tau,
+                 double tau2,
+                 double mixing_parameter,
+                 double mixing_parameter2,
+                 double beta,
+                 int  overlapping_nodes,
+                 int overlap_membership,
+                 int nmin,
+                 int nmax,
+                 int fixed_range,
+                 double ca,
+                 double *W,
+                 int *membership)
+{
+    Eigen::MatrixXd WM;
+    vector<int> vmembership;
+    int val = benchmark(excess, defect, num_nodes, average_k, max_degree, tau, tau2,
+                        mixing_parameter, mixing_parameter2, beta, overlapping_nodes,
+                        overlap_membership, nmin, nmax, fixed_range, ca, WM, vmembership);
+    membership = vmembership.data();
+    W = WM.data();
+    //cout << WM << endl;
+//    for (int i=0; i<vmembership.size();++i)
+//        cout << membership[i] << endl;
+    return val;
 }
 
 /**

@@ -47,3 +47,10 @@ if(OCTAVE_SUPPORT)
     octave_add_oct(lfrw_oct SOURCES lfr.cpp LINK_LIBRARIES LFRW EXTENSION "mex")
     #target_link_libraries(lfrw LFRW ${MATLAB_LIBRARIES})
 endif(OCTAVE_SUPPORT)
+
+
+if(PYTHON_SUPPORT)
+    set_source_files_properties(pylfrw.pyx PROPERTIES CYTHON_IS_CXX 1 )
+    cython_add_module(pylfrw pylfrw.pyx)
+    target_link_libraries(pylfrw LFRW)
+endif(PYTHON_SUPPORT)

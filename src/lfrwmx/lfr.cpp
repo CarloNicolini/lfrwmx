@@ -68,6 +68,8 @@ void printUsage()
     mexPrintf("'beta'\n");
     mexPrintf("\tDesidered beta exponent for powerlaw strenghts distribution, default beta=1.5\n");
     mexPrintf("'C'\n");
+    mexPrintf("\tDesidered verbosity level (range [0,7])\n");
+    mexPrintf("'C'\n");
     mexPrintf("\tDesidered clustering coefficient\n");
 }
 
@@ -191,12 +193,12 @@ error_type parse_args(int nOutputArgs, mxArray *outputArgs[], int nInputArgs, co
             }
             else if ( strcasecmp(cpartype,"t1")==0 )
             {
-                pars->tau = static_cast<double>((*mxGetPr(parval)));
+                pars->tau_degree = static_cast<double>((*mxGetPr(parval)));
                 argcount+=2;
             }
             else if ( strcasecmp(cpartype,"t2")==0 )
             {
-                pars->tau2 = static_cast<double>((*mxGetPr(parval)));
+                pars->tau_commsize = static_cast<double>((*mxGetPr(parval)));
                 argcount+=2;
             }
             else if ( strcasecmp(cpartype,"minc")==0 )
@@ -227,6 +229,16 @@ error_type parse_args(int nOutputArgs, mxArray *outputArgs[], int nInputArgs, co
             else if ( strcasecmp(cpartype,"C")==0 )
             {
                 pars->clustering_coeff = static_cast<double>((*mxGetPr(parval)));
+                argcount+=2;
+            }
+            else if ( strcasecmp(cpartype,"verbosity")==0 )
+            {
+                pars->verbosity = static_cast<double>((*mxGetPr(parval)));
+                if (pars->verbosity <0 || pars->verbosity > 7 )
+                {
+                    *argposerr = argcount+1;
+                    return ERROR_ARG_VALUE;
+                }
                 argcount+=2;
             }
             else
@@ -274,6 +286,7 @@ void mexFunction(int nOutputArgs, mxArray *outputArgs[], int nInputArgs, const m
             printUsage();
         mexErrMsgTxt(ss.str().c_str());
     }
+    FILELog::ReportingLevel() = static_cast<TLogLevel>(p.verbosity);
 
     try
     {
@@ -284,7 +297,7 @@ void mexFunction(int nOutputArgs, mxArray *outputArgs[], int nInputArgs, const m
         Eigen::MatrixXd W;
         vector<int> membership;
         // Call the main body of LFR weighted
-        benchmark(p.excess, p.defect, p.num_nodes, p.average_k, p.max_degree, p.tau, p.tau2, p.mixing_parameter_topological,  p.mixing_parameter_weights,  p.beta, p.overlapping_nodes, p.overlap_membership, p.nmin, p.nmax, p.fixed_range, p.clustering_coeff, W, membership);
+        benchmark(p.excess, p.defect, p.num_nodes, p.average_k, p.max_degree, p.tau_degree, p.tau_commsize, p.mixing_parameter_topological,  p.mixing_parameter_weights,  p.beta, p.overlapping_nodes, p.overlap_membership, p.nmin, p.nmax, p.fixed_range, p.clustering_coeff, W, membership);
 
         // Copy the resulting matrix to output argument #0
         memcpy(mxGetPr(outputArgs[0]),W.data(),p.num_nodes*p.num_nodes*sizeof(double));

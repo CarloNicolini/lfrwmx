@@ -18,7 +18,7 @@
 #include <Eigen/Core>
 #include "FileLogger.h"
 
-#define unlikely -214741
+#define unlikely_value -214741
 
 using namespace std;
 
