@@ -37,7 +37,7 @@ import cython
 ctypedef map[string, int] params_map
 
 cdef extern from "benchm.h":
-    cdef int benchmark_py(int excess, int defect, int num_nodes, double average_k, int max_degree, double tau, double tau2, double mixing_parameter, double mixing_parameter2, double beta, int overlapping_nodes, int overlap_membership, int nmin, int nmax, int fixed_range, double ca, double *W, int *membership)
+    cdef int benchmark_py(int excess, int defect, int num_nodes, double average_k, int max_degree, double tau, double tau2, double mixing_parameter, double mixing_parameter2, double beta, int overlapping_nodes, int overlap_membership, int nmin, int nmax, int fixed_range, double ca, vector[double] &W, vector[int] &membership)
 
 cdef extern from "set_parameters.h":
     cdef cppclass Parameters:
@@ -138,21 +138,8 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
 
     pars.print_parameters()
 
-    #cdef np.ndarray[double, ndim=2, mode="c"] W
-    #W = np.zeros([pars.num_nodes, pars.num_nodes])
-    #cdef vector[int] membership
-    #membership.assign(pars.num_nodes,1)
-    
-    #cdef double* W = new double[pars.num_nodes*pars.num_nodes]
-    #cdef int* membership = new int[pars.num_nodes]
-    #pointerW = ctypes.cast(W, ctypes.POINTER(ctypes.c_double))
-
-    cdef double* W
-    cdef int* M
-    #cdef np.ndarray [np.double_t, ndim=2] W = np.zeros([pars.num_nodes,pars.num_nodes])
-    #cdef np.ndarray [np.double_t, ndim=1] M = np.zeros([pars.num_nodes])
-
-    #cdef vector[int] M
+    cdef vector[double] W
+    cdef vector[int] M
     
     benchmark_py(pars.excess, pars.defect, pars.num_nodes, 
         pars.average_k, pars.max_degree, pars.tau_degree,
@@ -162,26 +149,5 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
          pars.fixed_range, pars.clustering_coeff,
          W,
          M)
-
-    w_wrapper = ArrayWrapper()
-    w_wrapper.set_data(pars.num_nodes*pars.num_nodes,<void*>W)
-    ndarray = np.array(w_wrapper,copy=False)
-    ndarray.base = <PyObject*> w_wrapper
-    #np.frombuffer(Wp,pars.num_nodes*pars.num_nodes,dtype="double")
-    #WA = np.ctypeslib.as_array(W, ndim=2, shape=(pars.num_nodes, pars.num_nodes))
-    #WA = tonumpyarray(membership, pars.num_nodes*pars.num_nodes)
+    return np.reshape(W,[pars.num_nodes,pars.num_nodes]),M
     
-    
-    #print "membership=",membership
-    # par[str("t1")] = kwargs.get("t1", 2)
-    # par[str("t2")] = kwargs.get("t2", 1)
-    # par[str("minc")] = kwargs.get("minc", -214741)
-    # par[str("maxc")] = kwargs.get("maxc", -214741)
-    # par[str("beta")] = kwargs.get("beta", 1.5)
-    # par[str("on")] = kwargs.get("on", 0)
-    # par[str("om")] = kwargs.get("om", 0)
-    # par[str("C")] = kwargs.get("C",-214741)
-
-
-    return 1
-
