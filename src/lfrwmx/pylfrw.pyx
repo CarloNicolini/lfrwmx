@@ -25,7 +25,7 @@ from __future__ import division
 import ctypes
 import numpy as np
 cimport numpy as np
-np.import_array() 
+#np.import_array() 
 from ctypes import c_double
 
 # Cython imports
@@ -33,11 +33,12 @@ from libcpp.string cimport string
 from libcpp.map cimport map
 from libcpp.vector cimport vector
 import cython
+from cython.view cimport array as cvarray
 
 ctypedef map[string, int] params_map
 
 cdef extern from "benchm.h":
-    cdef int benchmark_py(int excess, int defect, int num_nodes, double average_k, int max_degree, double tau, double tau2, double mixing_parameter, double mixing_parameter2, double beta, int overlapping_nodes, int overlap_membership, int nmin, int nmax, int fixed_range, double ca, double *W, int *membership)
+    cdef int benchmark_py(int excess, int defect, int num_nodes, double average_k, int max_degree, double tau, double tau2, double mixing_parameter, double mixing_parameter2, double beta, int overlapping_nodes, int overlap_membership, int nmin, int nmax, int fixed_range, double ca, vector[double] W, vector[int] membership)
 
 cdef extern from "set_parameters.h":
     cdef cppclass Parameters:
@@ -62,51 +63,6 @@ cdef extern from "set_parameters.h":
         int randomf
         double clustering_coeff
 
-
-cdef public api tonumpyarray(double* data, long long size):
-    if not (data and size >= 0): raise ValueError
-    cdef np.npy_intp dims = size
-    #NOTE: it doesn't take ownership of `data`. You must free `data` yourself
-    return np.PyArray_SimpleNewFromData(1, &dims, np.NPY_DOUBLE, <void*>data)
-
-
-from libc.stdlib cimport free
-from cpython cimport PyObject, Py_INCREF
-
-cdef class ArrayWrapper:
-    cdef void* data_ptr
-    cdef int size
-
-    cdef set_data(self, int size, void* data_ptr):
-        """ Set the data of the array
-        This cannot be done in the constructor as it must recieve C-level
-        arguments.
-        Parameters:
-        -----------
-        size: int
-            Length of the array.
-        data_ptr: void*
-            Pointer to the data            
-        """
-        self.data_ptr = data_ptr
-        self.size = size
-
-    def __array__(self):
-        """ Here we use the __array__ method, that is called when numpy
-            tries to get an array from the object."""
-        cdef np.npy_intp shape[1]
-        shape[0] = <np.npy_intp> self.size
-        # Create a 1D array, of length 'size'
-        ndarray = np.PyArray_SimpleNewFromData(1, shape,
-                                               np.NPY_INT, self.data_ptr)
-        return ndarray
-
-    def __dealloc__(self):
-        """ Frees the array. This is called by Python when all the
-        references to the object are gone. """
-        free(<void*>self.data_ptr)
-
-
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def pylfrw(N, avgk, maxk, mut, muw, **kwargs):    
@@ -116,7 +72,6 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
     if args_diff:
         raise Exception("Invalid args:" + str(tuple(args_diff)) + "as graph_rep: valid arguments are " + str(args))
 
-    
     cdef Parameters pars
     pars.num_nodes = int(N)
     pars.average_k = int(avgk)
@@ -138,50 +93,23 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
 
     pars.print_parameters()
 
-    #cdef np.ndarray[double, ndim=2, mode="c"] W
-    #W = np.zeros([pars.num_nodes, pars.num_nodes])
-    #cdef vector[int] membership
-    #membership.assign(pars.num_nodes,1)
+    cdef vector[double] W
+    cdef vector[int] M
+    #W = new double[pars.num_nodes*pars.num_nodes]
     
-    #cdef double* W = new double[pars.num_nodes*pars.num_nodes]
-    #cdef int* membership = new int[pars.num_nodes]
-    #pointerW = ctypes.cast(W, ctypes.POINTER(ctypes.c_double))
+    try:
+        benchmark_py(pars.excess, pars.defect, pars.num_nodes, 
+            pars.average_k, pars.max_degree, pars.tau_degree,
+             pars.tau_commsize, pars.mixing_parameter_topological, 
+             pars.mixing_parameter_weights, pars.beta, pars.overlapping_nodes, 
+             pars.overlap_membership, pars.nmin, pars.nmax,
+             pars.fixed_range, pars.clustering_coeff,
+             W,
+             M)
+    except RuntimeError:
+        raise
 
-    cdef double* W
-    cdef int* M
-    #cdef np.ndarray [np.double_t, ndim=2] W = np.zeros([pars.num_nodes,pars.num_nodes])
-    #cdef np.ndarray [np.double_t, ndim=1] M = np.zeros([pars.num_nodes])
-
-    #cdef vector[int] M
-    
-    benchmark_py(pars.excess, pars.defect, pars.num_nodes, 
-        pars.average_k, pars.max_degree, pars.tau_degree,
-         pars.tau_commsize, pars.mixing_parameter_topological, 
-         pars.mixing_parameter_weights, pars.beta, pars.overlapping_nodes, 
-         pars.overlap_membership, pars.nmin, pars.nmax,
-         pars.fixed_range, pars.clustering_coeff,
-         W,
-         M)
-
-    w_wrapper = ArrayWrapper()
-    w_wrapper.set_data(pars.num_nodes*pars.num_nodes,<void*>W)
-    ndarray = np.array(w_wrapper,copy=False)
-    ndarray.base = <PyObject*> w_wrapper
-    #np.frombuffer(Wp,pars.num_nodes*pars.num_nodes,dtype="double")
-    #WA = np.ctypeslib.as_array(W, ndim=2, shape=(pars.num_nodes, pars.num_nodes))
-    #WA = tonumpyarray(membership, pars.num_nodes*pars.num_nodes)
-    
-    
-    #print "membership=",membership
-    # par[str("t1")] = kwargs.get("t1", 2)
-    # par[str("t2")] = kwargs.get("t2", 1)
-    # par[str("minc")] = kwargs.get("minc", -214741)
-    # par[str("maxc")] = kwargs.get("maxc", -214741)
-    # par[str("beta")] = kwargs.get("beta", 1.5)
-    # par[str("on")] = kwargs.get("on", 0)
-    # par[str("om")] = kwargs.get("om", 0)
-    # par[str("C")] = kwargs.get("C",-214741)
-
-
+    print W
+    #print M
     return 1
 

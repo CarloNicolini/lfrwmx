@@ -314,7 +314,7 @@ bool Parameters::set(string & flag, string & num)
     {
         stringstream ss; ss << "ERROR while reading parameters: "<<flag<<" is an unknown option";
         throw std::logic_error(ss.str());
-        FILE_LOG(logERROR) << ss;
+        //FILE_LOG(logERROR) << ss;
         return false;
     }
     return true;

@@ -590,16 +590,22 @@ int benchmark_py(int excess,
                  int nmax,
                  int fixed_range,
                  double ca,
-                 double *W,
-                 int *membership)
+                 vector<double> &W,
+                 vector<int> &membership)
 {
     Eigen::MatrixXd WM;
     vector<int> vmembership;
     int val = benchmark(excess, defect, num_nodes, average_k, max_degree, tau, tau2,
                         mixing_parameter, mixing_parameter2, beta, overlapping_nodes,
                         overlap_membership, nmin, nmax, fixed_range, ca, WM, vmembership);
-    membership = vmembership.data();
-    W = WM.data();
+    
+    //W.resize(num_nodes);
+    for (int i=0; i<num_nodes*num_nodes; ++i)
+        W[i] = WM.coeffRef(i);
+    
+    //membership = vmembership;
+    //W.resize(num_nodes*num_nodes);
+    //membership.resize(num_nodes);
     //cout << WM << endl;
 //    for (int i=0; i<vmembership.size();++i)
 //        cout << membership[i] << endl;

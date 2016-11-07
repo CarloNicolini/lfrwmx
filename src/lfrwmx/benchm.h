@@ -80,7 +80,7 @@ int weights(deque<set<int> > & en, const deque<deque<int> > & member_list, const
  */
 int benchmark(bool excess, bool defect, int num_nodes, double  average_k, int  max_degree, double  tau, double  tau2, double  mixing_parameter, double  mixing_parameter2, double  beta, int  overlapping_nodes, int  overlap_membership, int  nmin, int  nmax, bool  fixed_range, double ca, Eigen::MatrixXd &W, vector<int> &membership);
 
-int benchmark_py(int excess, int defect, int num_nodes, double  average_k, int  max_degree, double  tau, double  tau2, double  mixing_parameter, double  mixing_parameter2, double  beta, int  overlapping_nodes, int  overlap_membership, int  nmin, int  nmax, int fixed_range, double ca, double *W, int *membership);
+int benchmark_py(int excess, int defect, int num_nodes, double  average_k, int  max_degree, double  tau, double  tau2, double  mixing_parameter, double  mixing_parameter2, double  beta, int  overlapping_nodes, int  overlap_membership, int  nmin, int  nmax, int fixed_range, double ca, vector<double> &W, vector<int> &membership);
 
 /**
  * @brief erase_file_if_exists
