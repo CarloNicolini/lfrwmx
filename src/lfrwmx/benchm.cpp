@@ -592,6 +592,7 @@ int benchmark_py(int excess,
                  double ca,
                  std::vector<double> &W,
                  std::vector<int> &membership)
+
 {
     Eigen::MatrixXd WM;
     vector<int> vmembership;
