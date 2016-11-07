@@ -66,7 +66,7 @@ cdef extern from "set_parameters.h":
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def pylfrw(N, avgk, maxk, mut, muw, **kwargs):    
-	"""
+    """
     LFRW: Stochastic block model
     
     Usage:
@@ -79,12 +79,15 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
         mut: topological mixing coefficient
         muw: weights mixing coefficient
     Kwargs:
+        seed: random seed to use, if negative, current time in seconds is used.
         tau_degree: powerlaw coefficient for degree distribution (default 2)
         tau_commsize: powerlaw coefficient for community size distribution (default 1)
         minc: minimum number of nodes in community
         maxc: maximum number of nodes in community
         beta: power coefficient for strenghts distribution (default 1.5)
-        
+        on: number of overlapping nodes (default 0)
+        om: number of overlapping membership (default 0)
+        C: desidered clustering coefficient
     Out:
         adj_mat: adjacency matrix of the produced network
         membership: affiliation vector of nodes
@@ -116,7 +119,7 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
     except RuntimeError:
         raise
 
-    pars.print_parameters()
+    #pars.print_parameters()
 
     cdef vector[double] W
     cdef vector[int] M
