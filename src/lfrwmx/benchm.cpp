@@ -590,10 +590,16 @@ int benchmark_py(int excess,
                  int nmax,
                  int fixed_range,
                  double ca,
+                 int randseed,
                  std::vector<double> &W,
                  std::vector<int> &membership)
 
 {
+    if (randseed>0)
+        srand5(randseed);
+    else
+        srand4();
+
     Eigen::MatrixXd WM;
     vector<int> vmembership;
     int val = benchmark(excess, defect, num_nodes, average_k, max_degree, tau, tau2,

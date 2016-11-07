@@ -38,7 +38,7 @@ from cython.view cimport array as cvarray
 ctypedef map[string, int] params_map
 
 cdef extern from "benchm.h":
-    cdef int benchmark_py(int excess, int defect, int num_nodes, double average_k, int max_degree, double tau, double tau2, double mixing_parameter, double mixing_parameter2, double beta, int overlapping_nodes, int overlap_membership, int nmin, int nmax, int fixed_range, double ca, vector[double] &W, vector[int] &membership)
+    cdef int benchmark_py(int excess, int defect, int num_nodes, double average_k, int max_degree, double tau, double tau2, double mixing_parameter, double mixing_parameter2, double beta, int overlapping_nodes, int overlap_membership, int nmin, int nmax, int fixed_range, double ca, int random_seed, vector[double] &W, vector[int] &membership)
 
 cdef extern from "set_parameters.h":
     cdef cppclass Parameters:
@@ -66,7 +66,7 @@ cdef extern from "set_parameters.h":
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def pylfrw(N, avgk, maxk, mut, muw, **kwargs):    
-    args = ['tau_degree', 'tau_commsize', 'minc', 'maxc', 'beta', 'on', 'om', 'C', 'verbosity']
+    args = ['tau_degree', 'tau_commsize', 'minc', 'maxc', 'beta', 'on', 'om', 'C', 'verbosity', 'seed']
     
     args_diff = set(kwargs.keys()) - set(args)
     if args_diff:
@@ -86,6 +86,7 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
     pars.overlapping_nodes = int(kwargs.get("on",pars.overlapping_nodes))
     pars.overlap_membership = int(kwargs.get("om",pars.overlap_membership))
     pars.clustering_coeff = float(kwargs.get("C",pars.clustering_coeff))
+    random_seed = int(kwargs.get("seed",-1))
     try:
         pars.arrange()
     except RuntimeError:
@@ -102,6 +103,7 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
          pars.mixing_parameter_weights, pars.beta, pars.overlapping_nodes, 
          pars.overlap_membership, pars.nmin, pars.nmax,
          pars.fixed_range, pars.clustering_coeff,
+         random_seed,
          W,
          M)
     return np.reshape(W,[pars.num_nodes,pars.num_nodes]),M
