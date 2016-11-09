@@ -1,5 +1,5 @@
 #include "set_parameters.h"
-
+#include <stdexcept>
 Parameters::Parameters()
 {
 
