@@ -38,7 +38,7 @@ from cython.view cimport array as cvarray
 ctypedef map[string, int] params_map
 
 cdef extern from "benchm.h":
-    cdef int benchmark_py(int excess, int defect, int num_nodes, double average_k, int max_degree, double tau, double tau2, double mixing_parameter, double mixing_parameter2, double beta, int overlapping_nodes, int overlap_membership, int nmin, int nmax, int fixed_range, double ca, int random_seed, vector[double] &W, vector[int] &membership)
+    cdef int benchmark_py(int excess, int defect, int num_nodes, double average_k, int max_degree, double tau, double tau2, double mixing_parameter, double mixing_parameter2, double beta, int overlapping_nodes, int overlap_membership, int nmin, int nmax, int fixed_range, double ca, int random_seed, int loglevel, vector[double] &W, vector[int] &membership)
 
 cdef extern from "set_parameters.h":
     cdef cppclass Parameters:
@@ -93,13 +93,14 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
         membership: affiliation vector of nodes
     """
 
-    args = ['tau_degree', 'tau_commsize', 'minc', 'maxc', 'beta', 'on', 'om', 'C', 'verbosity', 'seed']
+    args = ['tau_degree', 'tau_commsize', 'minc', 'maxc', 'beta', 'on', 'om', 'C', 'verbosity', 'seed', 'loglevel']
     
     args_diff = set(kwargs.keys()) - set(args)
     if args_diff:
         raise Exception("Invalid args:" + str(tuple(args_diff)) + "as graph_rep: valid arguments are " + str(args))
 
     cdef Parameters pars
+    cdef int loglevel = kwargs.get('loglevel',0)
     pars.num_nodes = int(N)
     pars.average_k = int(avgk)
     pars.max_degree = int(maxk)
@@ -131,6 +132,7 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
          pars.overlap_membership, pars.nmin, pars.nmax,
          pars.fixed_range, pars.clustering_coeff,
          random_seed,
+         loglevel,
          W,
          M)
     return np.reshape(W,[pars.num_nodes,pars.num_nodes]),M

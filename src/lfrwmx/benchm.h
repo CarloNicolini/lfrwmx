@@ -80,7 +80,7 @@ int weights(deque<set<int> > & en, const deque<deque<int> > & member_list, const
  */
 int benchmark(bool excess, bool defect, int num_nodes, double  average_k, int  max_degree, double  tau, double  tau2, double  mixing_parameter, double  mixing_parameter2, double  beta, int  overlapping_nodes, int  overlap_membership, int  nmin, int  nmax, bool  fixed_range, double ca, Eigen::MatrixXd &W, vector<int> &membership);
 // Same version for wrapping with Cython, using vectors
-int benchmark_py(int excess, int defect, int num_nodes, double  average_k, int  max_degree, double  tau, double  tau2, double  mixing_parameter, double  mixing_parameter2, double  beta, int  overlapping_nodes, int  overlap_membership, int  nmin, int  nmax, int fixed_range, double ca, int randseed, std::vector<double> &W, std::vector<int> &membership);
+int benchmark_py(int excess, int defect, int num_nodes, double  average_k, int  max_degree, double  tau, double  tau2, double  mixing_parameter, double  mixing_parameter2, double  beta, int  overlapping_nodes, int  overlap_membership, int  nmin, int  nmax, int fixed_range, double ca, int randseed, int loglevel, std::vector<double> &W, std::vector<int> &membership);
 
 
 /**

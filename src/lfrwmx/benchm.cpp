@@ -591,10 +591,12 @@ int benchmark_py(int excess,
                  int fixed_range,
                  double ca,
                  int randseed,
+                 int logLevel,
                  std::vector<double> &W,
                  std::vector<int> &membership)
 
 {
+    FILELog::ReportingLevel() = static_cast<TLogLevel>(std::max(std::min(logLevel,7),0));
     if (randseed>0)
         srand5(randseed);
     else
