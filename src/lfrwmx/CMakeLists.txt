@@ -30,7 +30,9 @@ standard_include.h
 
 add_library(LFRW SHARED ${LFRW_SRCS} ${LFRW_HDRS})
 
+add_executable(run_benchm run_benchm.cpp)
 add_executable(test_benchm test_benchm.cpp)
+target_link_libraries(run_benchm LFRW)
 target_link_libraries(test_benchm LFRW)
 
 add_executable(test_powerlaw test_powerlaw.cpp)
