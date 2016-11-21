@@ -124,16 +124,19 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
 
     cdef vector[double] W
     cdef vector[int] M
-    
-    benchmark_py(pars.excess, pars.defect, pars.num_nodes, 
-        pars.average_k, pars.max_degree, pars.tau_degree,
-         pars.tau_commsize, pars.mixing_parameter_topological, 
-         pars.mixing_parameter_weights, pars.beta, pars.overlapping_nodes, 
-         pars.overlap_membership, pars.nmin, pars.nmax,
-         pars.fixed_range, pars.clustering_coeff,
-         random_seed,
-         loglevel,
-         W,
-         M)
+    try:
+        benchmark_py(pars.excess, pars.defect, pars.num_nodes, 
+            pars.average_k, pars.max_degree, pars.tau_degree,
+             pars.tau_commsize, pars.mixing_parameter_topological, 
+             pars.mixing_parameter_weights, pars.beta, pars.overlapping_nodes, 
+             pars.overlap_membership, pars.nmin, pars.nmax,
+             pars.fixed_range, pars.clustering_coeff,
+             random_seed,
+             loglevel,
+             W,
+             M)
+    except RuntimeError:
+        raise
+        
     return np.reshape(W,[pars.num_nodes,pars.num_nodes]),M
     
