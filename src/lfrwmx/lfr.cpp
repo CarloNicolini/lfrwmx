@@ -67,7 +67,7 @@ void printUsage()
     mexPrintf("\tDesidered exponent for the community size distribution, default t2=1\n");
     mexPrintf("'beta'\n");
     mexPrintf("\tDesidered beta exponent for powerlaw strenghts distribution, default beta=1.5\n");
-    mexPrintf("'C'\n");
+    mexPrintf("'verbosity'\n");
     mexPrintf("\tDesidered verbosity level (range [0,7])\n");
     mexPrintf("'C'\n");
     mexPrintf("\tDesidered clustering coefficient\n");
