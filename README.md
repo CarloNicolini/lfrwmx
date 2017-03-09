@@ -13,12 +13,13 @@ In this release I've adapted and partially rewritten the freely-available code (
 
 To compile clone this dataset:
 
-    $> git clone https:/github.com/CarloNicolini/lfrwmx.git
+    $> git clone --recursive https:/github.com/CarloNicolini/lfrwmx.git
     $> cd lfrwmx
     $> mkdir build
     $> cd build
     $> cmake ..
 
+The *--recursive* option is necessary as LFRWMX depends on Eigen libraries, and they are included as a submodule here.
 For the compilation of the MEX file you need MATLAB mex headers, usually installed with a standard Matlab installation.
 
 You can compile the LFR benchmark by specifying:
