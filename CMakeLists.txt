@@ -1,5 +1,5 @@
-set(CMAKE_CXX_COMPILER "g++-4.8")
-set(CMAKE_C_COMPILER "gcc-4.8")
+set(CMAKE_CXX_COMPILER "g++")
+set(CMAKE_C_COMPILER "gcc")
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(LFRW)
 
