@@ -1,6 +1,7 @@
-#set(CMAKE_CXX_COMPILER "g++-4.8")
-#set(CMAKE_C_COMPILER "gcc-4.8")
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+set(CMAKE_CXX_COMPILER "g++")
+set(CMAKE_C_COMPILER "gcc")
+
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(LFRW)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
