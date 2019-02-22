@@ -71,8 +71,10 @@ set( CYTHON_FLAGS "" CACHE STRING
   "Extra flags to the cython compiler." )
 mark_as_advanced( CYTHON_ANNOTATE CYTHON_NO_DOCSTRINGS CYTHON_FLAGS )
 
-find_package( Cython REQUIRED )
-find_package(Python3 COMPONENTS Python)
+set(PYTHON_LIBRARY ${Python3_LIBRARIES})
+
+find_package(Cython3)
+find_package(PythonLibs 3.5 REQUIRED)
 
 set( CYTHON_CXX_EXTENSION "cxx" )
 set( CYTHON_C_EXTENSION "c" )

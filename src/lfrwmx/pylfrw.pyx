@@ -20,7 +20,6 @@
 #   License and a copy of the GNU General Public License along with
 #   PACO. If not, see <http://www.gnu.org/licenses/>.
 
-
 from __future__ import division
 import ctypes
 import numpy as np
@@ -78,6 +77,7 @@ def pylfrw(N, avgk, maxk, mut, muw, **kwargs):
         maxk: maximum degree
         mut: topological mixing coefficient
         muw: weights mixing coefficient
+        
     Kwargs:
         seed: random seed to use, if negative, current time in seconds is used.
         tau_degree: powerlaw coefficient for degree distribution (default 2)
